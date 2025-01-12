@@ -1,1 +1,2 @@
+name = "zappr-api"
 main = "api/index.js"
