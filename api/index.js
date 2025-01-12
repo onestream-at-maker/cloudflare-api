@@ -165,8 +165,6 @@ export default {
                         info: specifiedURL
                     }), returnErrorHeaders(400));
                 }
-            } else {
-                return Response.redirect("https://github.com/ZapprTV/backend", 301);
             };
         } else if (request.method === "OPTIONS") {
             return new Response(null, {
