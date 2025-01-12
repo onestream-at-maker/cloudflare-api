@@ -1,2 +1,3 @@
 name = "zappr-api"
+compatibility_date = "2025-01-12"
 main = "api/index.js"
