@@ -17,14 +17,14 @@ export default {
         const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
         const supportedURLRegexes = {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
-            youtube: /^https?:\/\/(?:www\.)?youtube\.com\/channel\/UC[a-zA-Z0-9-_? ]+$/g
+            youtube: /^https?:\/\/(?:www\.)?youtube\.com\/channel\/UC[a-zA-Z0-9-_? ]+$/g,
+            livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g
         };
 
         const vercelURLRegexes = {
             rai: /^https?:\/\/mediapolis.rai.it\/relinker\/relinkerServlet.htm\?cont=[0-9]{1,}$/g,
             babylon: /^https?:\/\/(?:www\.)?[a-zA-Z0-9]{1,}\.[a-z]{2,}\/video\/viewlivestreaming\?rel=[a-zA-Z0-9]+&cntr=0$/g
         };
-    
     
         const requestURL = new URL(request.url);
         const specifiedURL = decodeURIComponent(requestURL.search.slice(1));
@@ -100,6 +100,23 @@ export default {
                                 });
                             break;
 
+                        case "livestream":
+                            await fetch(`https://player-api.new.livestream.com${new URL(specifiedURL).pathname}/stream_info`)
+                                .then(response => response.json())
+                                .then(json => {
+                                    requestStatus = "redirect";
+                                    response = json.secure_m3u8_url;
+                                })
+                                .catch(err => {
+                                    requestStatus = false;
+                                    errorJSON = JSON.stringify({
+                                        error: "Impossibile recuperare l'URL della stream.",
+                                        info: specifiedURL
+                                    });
+                                    errorStatus = 500;
+                                });
+                            break;
+
                         case "youtube":
                             const { parseHTML } = await import("linkedom");
                             const youtubeURL = new URL(specifiedURL);
@@ -133,7 +150,7 @@ export default {
                                             errorStatus = 400;
                                         };
                                     } else {
-                                        livestreamId = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.filter(el => el.tabRenderer && el.tabRenderer.title === "Live")[0].tabRenderer.content.richGridRenderer.contents.filter(el => el.richItemRenderer && !el.richItemRenderer.content.videoRenderer.publishedTimeText)[0].richItemRenderer.content.videoRenderer.videoId;
+                                        livestreamId = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.filter(el => el.tabRenderer && el.tabRenderer.title === "Live")[0].tabRenderer.content.richGridRenderer.contents.filter(el => el.richItemRenderer != undefined && !el.richItemRenderer.content.videoRenderer.publishedTimeText)[0].richItemRenderer.content.videoRenderer.videoId;
                                         requestStatus = "redirect";
                                         response = `https://www.youtube-nocookie.com/embed/${livestreamId}?autoplay=1&modestbranding=1&rel=0&hl=it-it`;
                                     };
