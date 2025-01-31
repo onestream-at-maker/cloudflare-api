@@ -103,9 +103,13 @@ export default {
                         case "livestream":
                             await fetch(`https://player-api.new.livestream.com${new URL(specifiedURL).pathname}/stream_info`)
                                 .then(response => response.json())
-                                .then(json => {
-                                    requestStatus = "redirect";
-                                    response = json.secure_m3u8_url;
+                                .then(async (json) => {
+                                    await fetch(json.secure_m3u8_url)
+                                        .then(response => response.url)
+                                        .then(url => {
+                                            requestStatus = "redirect";
+                                            response = url;
+                                        });
                                 })
                                 .catch(err => {
                                     requestStatus = false;
