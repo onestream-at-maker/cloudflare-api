@@ -74,7 +74,7 @@ export default {
                 testURLforVercel(specifiedURL);
                 if (vercelTestResults.matched) {
                     return new Response(JSON.stringify({
-                        error: "Stai usando l'API Cloudflare, ma l'URL specificato richiede l'uso dell'API Vercel. Leggi di più su https://github.com/ZapprTV/backend#readme.",
+                        error: "Stai usando l'API Cloudflare, ma l'URL specificato richiede l'uso dell'API Vercel. Leggi di più su https://github.com/ZapprTV/cloudflare-api#readme.",
                         info: specifiedURL
                     }), returnErrorHeaders(400));
                 } else if (testResults.matched) {
@@ -178,7 +178,7 @@ export default {
                     };
                 } else {
                     return new Response(JSON.stringify({
-                        error: "L'URL specificato non è valido, non è nel formato corretto oppure non è supportato dall'API di Zappr. Per vedere la lista di URL compatibili visita https://github.com/ZapprTV/backend#readme.",
+                        error: "L'URL specificato non è valido, non è nel formato corretto oppure non è supportato dall'API di Zappr. Per vedere la lista di URL compatibili visita https://github.com/ZapprTV/cloudflare-api#readme.",
                         info: specifiedURL
                     }), returnErrorHeaders(400));
                 }
