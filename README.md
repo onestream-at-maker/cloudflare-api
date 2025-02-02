@@ -1,10 +1,10 @@
-Questa è l'API di Zappr su Cloudflare Workers. Viene usata per far riprodurre al [frontend](https://github.com/ZapprTV/frontend) i canali trasmessi su Dailymotion, Vimeo Livestream e YouTube *(in base all'ID di un canale)*.
+Questa è l'API di Zappr su Cloudflare Workers. Viene usata per far riprodurre al [frontend](https://github.com/ZapprTV/Zappr) i canali trasmessi su Dailymotion e Vimeo Livestream.
 
 Per usarla, effettua una chiamata `GET` a `https://cloudflare-api.zappr.stream/api` e inserisci l'URL che vuoi "trasformare" come parametro.
 
 Per esempio, per "trasformare" l'URL su Dailymotion di Radio Roma (`https://www.dailymotion.com/video/x96kfby`), bisognerebbe fare una richiesta a `https://cloudflare-api.zappr.stream/api?https://www.dailymotion.com/video/x96kfby`.
 
-**Per i canali Rai _(senza geoblocking)_ e Babylon Cloud, usare l'[API su Vercel](https://github.com/ZapprTV/vercel-api).**
+**Per i canali trasmessi su YouTube e Babylon Cloud, e i canali Rai _(senza geoblocking)_, usare l'[API su Vercel](https://github.com/ZapprTV/vercel-api).**
 
 ## URL supportati
 - Dailymotion:
@@ -12,7 +12,3 @@ Per esempio, per "trasformare" l'URL su Dailymotion di Radio Roma (`https://www.
 
 - Vimeo Livestream:
     - `*://(www.)livestream.com/accounts/XXXXXX/events/XXXXXX`
-
-- YouTube (in base all'ID di un canale):
-    - `*://(www.)youtube.com/channel/UCxxxxxxxxxxxxxxx` (otterrà l'URL dell'ultima live avviata dal canale)
-    - `*://(www.)youtube.com/channel/UCxxxxxxxxxxxxxx?Stringa` (otterrà l'URL della live che contiene nel titolo la stringa presente dopo il punto interrogativo nell'URL)

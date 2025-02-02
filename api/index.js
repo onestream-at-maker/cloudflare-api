@@ -17,11 +17,11 @@ export default {
         const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
         const supportedURLRegexes = {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
-            youtube: /^https?:\/\/(?:www\.)?youtube\.com\/channel\/UC[a-zA-Z0-9-_? ]+$/g,
             livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g
         };
-
+        
         const vercelURLRegexes = {
+            youtube: /^https?:\/\/(?:www\.)?youtube\.com\/channel\/UC[a-zA-Z0-9-_? ]+$/g,
             rai: /^https?:\/\/mediapolis.rai.it\/relinker\/relinkerServlet.htm\?cont=[0-9]{1,}$/g,
             babylon: /^https?:\/\/(?:www\.)?[a-zA-Z0-9]{1,}\.[a-z]{2,}\/video\/viewlivestreaming\?rel=[a-zA-Z0-9]+&cntr=0$/g
         };
@@ -120,45 +120,6 @@ export default {
                                     errorStatus = 500;
                                 });
                             break;
-
-                        case "youtube":
-                            const { parseHTML } = await import("linkedom");
-                            const youtubeURL = new URL(specifiedURL);
-                            await fetch(`${youtubeURL.href.replace(youtubeURL.search, "")}/streams`, {
-                                headers: {
-                                    "Cookie": "CONSENT=YES+42"
-                                }
-                            })
-                                .then(response => response.text())
-                                .then(html => {
-                                    let ytInitialData = {};
-                                    let livestreamId = "";
-
-                                    parseHTML(html).document.querySelectorAll("script").forEach(el => {
-                                        if (el.innerText.startsWith("var ytInitialData")) {
-                                            ytInitialData = JSON.parse(el.innerText.replaceAll("var ytInitialData = ", "").slice(0, -1));
-                                        };
-                                    });
-
-                                    if (youtubeURL.search != "") {
-                                        if (ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.filter(el => el.tabRenderer && el.tabRenderer.title === "Live")[0].tabRenderer.content.richGridRenderer.contents.filter(el => el.richItemRenderer && el.richItemRenderer.content.videoRenderer.title.runs[0].text.toLowerCase().includes(youtubeURL.search.slice(1).toLowerCase()) && !el.richItemRenderer.content.videoRenderer.publishedTimeText) != "") {
-                                            livestreamId = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.filter(el => el.tabRenderer && el.tabRenderer.title === "Live")[0].tabRenderer.content.richGridRenderer.contents.filter(el => el.richItemRenderer && el.richItemRenderer.content.videoRenderer.title.runs[0].text.toLowerCase().includes(youtubeURL.search.slice(1).toLowerCase()) && !el.richItemRenderer.content.videoRenderer.publishedTimeText)[0].richItemRenderer.content.videoRenderer.videoId;
-                                            requestStatus = "redirect";
-                                            response = `https://www.youtube-nocookie.com/embed/${livestreamId}?autoplay=1&modestbranding=1&rel=0&hl=it-it`;
-                                        } else {
-                                            requestStatus = false;
-                                            errorJSON = JSON.stringify({
-                                                error: `Impossibile trovare una live con "${youtubeURL.search.slice(1)}" nel titolo.`,
-                                                info: specifiedURL
-                                            });
-                                            errorStatus = 400;
-                                        };
-                                    } else {
-                                        livestreamId = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.filter(el => el.tabRenderer && el.tabRenderer.title === "Live")[0].tabRenderer.content.richGridRenderer.contents.filter(el => el.richItemRenderer != undefined && !el.richItemRenderer.content.videoRenderer.publishedTimeText)[0].richItemRenderer.content.videoRenderer.videoId;
-                                        requestStatus = "redirect";
-                                        response = `https://www.youtube-nocookie.com/embed/${livestreamId}?autoplay=1&modestbranding=1&rel=0&hl=it-it`;
-                                    };
-                                });
                     };
     
                     if (requestStatus === "redirect") {
