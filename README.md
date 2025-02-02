@@ -4,7 +4,7 @@ Per usarla, effettua una chiamata `GET` a `https://cloudflare-api.zappr.stream/a
 
 Per esempio, per "trasformare" l'URL su Dailymotion di Radio Roma (`https://www.dailymotion.com/video/x96kfby`), bisognerebbe fare una richiesta a `https://cloudflare-api.zappr.stream/api?https://www.dailymotion.com/video/x96kfby`.
 
-**Per i canali trasmessi su YouTube e Babylon Cloud, e i canali Rai _(senza geoblocking)_, usare l'[API su Vercel](https://github.com/ZapprTV/vercel-api).**
+**Per i canali trasmessi su Babylon Cloud e i canali Rai _(senza geoblocking)_, usare l'[API su Vercel](https://github.com/ZapprTV/vercel-api).**
 
 ## URL supportati
 - Dailymotion:

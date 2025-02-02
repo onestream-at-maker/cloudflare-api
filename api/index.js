@@ -21,7 +21,6 @@ export default {
         };
         
         const vercelURLRegexes = {
-            youtube: /^https?:\/\/(?:www\.)?youtube\.com\/channel\/UC[a-zA-Z0-9-_? ]+$/g,
             rai: /^https?:\/\/mediapolis.rai.it\/relinker\/relinkerServlet.htm\?cont=[0-9]{1,}$/g,
             babylon: /^https?:\/\/(?:www\.)?[a-zA-Z0-9]{1,}\.[a-z]{2,}\/video\/viewlivestreaming\?rel=[a-zA-Z0-9]+&cntr=0$/g
         };
