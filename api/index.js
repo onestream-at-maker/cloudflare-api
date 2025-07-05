@@ -17,7 +17,8 @@ export default {
         const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
         const supportedURLRegexes = {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
-            livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g
+            livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g,
+			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g
         };
         
         const vercelURLRegexes = {
@@ -119,6 +120,22 @@ export default {
                                     errorStatus = 500;
                                 });
                             break;
+
+						case "netplus":
+							await fetch(specifiedURL)
+								.then(netplusResponse => {
+									requestStatus = "redirect";
+									response = netplusResponse.url;
+								})
+								.catch(err => {
+                                    requestStatus = false;
+                                    errorJSON = JSON.stringify({
+                                        error: "Impossibile recuperare l'URL della stream.",
+                                        info: specifiedURL
+                                    });
+                                    errorStatus = 500;
+                                });
+							break;
                     };
     
                     if (requestStatus === "redirect") {
