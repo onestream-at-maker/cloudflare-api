@@ -12,3 +12,6 @@ Per esempio, per "trasformare" l'URL su Dailymotion di Radio Roma (`https://www.
 
 - Vimeo Livestream:
     - `*://(www.)livestream.com/accounts/XXXXXX/events/XXXXXX`
+
+- Netplus:
+    - `*://viamotionhsi.netplus.ch/live/eds/XXXXXX/browser-*/XXXXXX.*`
