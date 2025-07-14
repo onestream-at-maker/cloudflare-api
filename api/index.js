@@ -18,8 +18,7 @@ export default {
         const supportedURLRegexes = {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
             livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g,
-			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g,
-            dlive: /^https?:\/\/live\.prd\.dlive\.tv\/hls\/live\/.*\.m3u8$/g
+			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g
         };
         
         const vercelURLRegexes = {
@@ -137,26 +136,6 @@ export default {
                                     errorStatus = 500;
                                 });
 							break;
-
-                        case "dlive":
-                            await fetch(specifiedURL)
-                                .then(response => response.text())
-                                .then(async m3u => {
-                                    const m3uURL = m3u.split("\n").filter(line => line && !line.startsWith("#"))[0];
-
-                                    await fetch("https://live.prd.dlive.tv/hls/sign/url", {
-                                        method: "POST",
-                                        body: JSON.stringify({
-                                            playlisturi: m3uURL
-                                        })
-                                    })
-                                        .then(response => response.text())
-                                        .then(url => {
-                                            requestStatus = "redirect";
-                                            response = url;
-                                        });
-                                });
-                            break;
                     };
     
                     if (requestStatus === "redirect") {
