@@ -18,7 +18,8 @@ export default {
         const supportedURLRegexes = {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
             livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g,
-			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g
+			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g,
+            arezzotv: /^https?:\/\/(?:www\.)?arezzotv\.it.*$/g
         };
         
         const vercelURLRegexes = {
@@ -136,6 +137,24 @@ export default {
                                     errorStatus = 500;
                                 });
 							break;
+
+                        case "arezzotv":
+                            const { parseHTML } = await import("linkedom");
+                            await fetch(specifiedURL)
+                                .then(response => response.text())
+                                .then(html => {
+                                    const youtubeEmbedURL = parseHTML(html).document.querySelector("iframe").src + "?autoplay=1&modestbranding=1&rel=0&hl=it-it";
+                                    requestStatus = "redirect";
+									response = youtubeEmbedURL;
+                                })
+                                .catch(err => {
+                                    requestStatus = false;
+                                    errorJSON = JSON.stringify({
+                                        error: "Impossibile recuperare l'URL della stream.",
+                                        info: specifiedURL
+                                    });
+                                    errorStatus = 500;
+                                });
                     };
     
                     if (requestStatus === "redirect") {
