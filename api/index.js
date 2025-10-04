@@ -19,7 +19,8 @@ export default {
             dailymotion: /^https?:\/\/(?:www\.)?dailymotion\.com\/video\/[a-zA-Z0-9]+$/g,
             livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g,
 			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g,
-            arezzotv: /^https?:\/\/(?:www\.)?arezzotv\.it.*$/g
+            arezzotv: /^https?:\/\/(?:www\.)?arezzotv\.it.*$/g,
+            livetvuk: /^https?:\/\/(?:www\.)?livetvuk\.com\/yayin\/.*$/g
         };
         
         const vercelURLRegexes = {
@@ -139,7 +140,7 @@ export default {
 							break;
 
                         case "arezzotv":
-                            const { parseHTML } = await import("linkedom");
+                            var { parseHTML } = await import("linkedom");
                             await fetch(specifiedURL)
                                 .then(response => response.text())
                                 .then(html => {
@@ -155,6 +156,30 @@ export default {
                                     });
                                     errorStatus = 500;
                                 });
+                            break;
+
+                        case "livetvuk":
+                            var { parseHTML } = await import("linkedom");
+                            await fetch(specifiedURL, {
+                                headers: {
+                                    "Origin": "https://www.livetvuk.com",
+                                    "Referer": "https://www.livetvuk.com/"
+                                }
+                            })
+                                .then(response => response.text())
+                                .then(html => {
+                                    requestStatus = "redirect";
+									response = parseHTML(html).document.querySelector("source").src.replaceAll(/&remote=no_check_ip.*/g, "");
+                                })
+                                .catch(err => {
+                                    requestStatus = false;
+                                    errorJSON = JSON.stringify({
+                                        error: "Couldn't get the stream URL.",
+                                        info: err.stack
+                                    });
+                                    errorStatus = 500;
+                                });
+                            break;
                     };
     
                     if (requestStatus === "redirect") {
