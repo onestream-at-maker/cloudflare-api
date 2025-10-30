@@ -1,4 +1,4 @@
-name = "zappr-api"
+name = "schauefern-fetch"
 compatibility_date = "2025-01-12"
 main = "api/index.js"
 routes = [
