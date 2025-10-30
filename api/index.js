@@ -20,7 +20,7 @@ export default {
             livestream: /^https?:\/\/(?:www\.)?livestream\.com\/accounts\/[0-9]+\/events\/[0-9]+$/g,
 			netplus: /^https?:\/\/viamotionhsi\.netplus\.ch\/live\/eds\/.*\/browser-.*\/.*\..*$/g,
             arezzotv: /^https?:\/\/(?:www\.)?arezzotv\.it.*$/g,
-            livetvuk: /^https?:\/\/(?:www\.)?livetvuk\.com\/yayin\/.*$/g
+            schauefern: /^https?:\/\/(?:www\.)?schauefern\.com\/yayin\/.*$/g
         };
         
         const vercelURLRegexes = {
@@ -158,12 +158,12 @@ export default {
                                 });
                             break;
 
-                        case "livetvuk":
+                        case "schauefern":
                             var { parseHTML } = await import("linkedom");
                             await fetch(specifiedURL, {
                                 headers: {
-                                    "Origin": "https://www.livetvuk.com",
-                                    "Referer": "https://www.livetvuk.com/"
+                                    "Origin": "https://www.schauefern.com",
+                                    "Referer": "https://www.schauefern.com/"
                                 }
                             })
                                 .then(response => response.text())
