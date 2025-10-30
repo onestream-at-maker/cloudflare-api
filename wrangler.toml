@@ -2,5 +2,5 @@ name = "zappr-api"
 compatibility_date = "2025-01-12"
 main = "api/index.js"
 routes = [
-  { pattern = "cloudflare-api.zappr.stream", custom_domain = true }
+  { pattern = "api.planet-tv.ch", custom_domain = true }
 ]
